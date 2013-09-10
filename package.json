@@ -1,0 +1,32 @@
+{
+  "name": "machete",
+  "preferGlobal": true,
+  "version": "0.0.1",
+  "author": "Jeff Escalante <hello@jenius.me>",
+  "description": "fast, beautiful markdown slideshows",
+  "keywords": [
+    "markdown",
+    "slideshow",
+    "presentation"
+  ],
+  "bin": {
+    "machete": "./bin/machete"
+  },
+  "main": "./lib",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jenius/machete.git"
+  },
+  "dependencies": {
+    "robotskirt": "2.7.x",
+    "optimist": "0.6.x",
+    "coffee-script": "1.6.x",
+    "jade": "0.35.x",
+    "stylus": "0.37.x",
+    "js-yaml": "~2.1.0"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  }
+}

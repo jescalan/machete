@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+
+require('coffee-script');
+var machete = require('../lib'),
+    argv = require('optimist').argv;
+
