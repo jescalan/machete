@@ -28,7 +28,7 @@ If you'd like to deploy your slideshow, run `machete deploy [deployer-name]`. De
 
 Chances are you might want to configure your slideshow a little more, you power user you. No worries, we've got you covered. Just drop a file called `config.yml` into your presentation folder, and feel free to specify any of the following options.
 
-```
+```yaml
 title: 'Slideshow Title'
 author: 'Joe Example'
 controls: true # show arrow controls
@@ -46,7 +46,7 @@ To make your own theme, just specify a path for the `theme_path` variable in you
 
 There are a few locals that will be sent to the jade file - you can see a good example of this in the templates folder linked above, but they are also documented below for reference:
 
-```
+```ruby
 slides # => array of html strings representing each slide
 title # => string representing the presentation title
 ```
