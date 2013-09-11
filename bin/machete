@@ -1,6 +1,20 @@
 #!/usr/bin/env node
 
 require('coffee-script');
-var machete = require('../lib'),
+var Machete = require('../lib'),
+    path = require('path'),
     argv = require('optimist').argv;
 
+switch(argv._[0]){
+  case 'new':
+    console.log('creating scaffold...'); break;
+  case 'deploy':
+    console.log('deploying...'); break;
+  default:
+    generate(path.resolve(argv._[0]) || process.cwd())
+}
+
+function generate(dir){
+  var machete = new Machete(dir);
+  machete.generate();
+}
