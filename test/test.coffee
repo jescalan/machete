@@ -22,10 +22,10 @@ describe 'basic', ->
 
   it 'should include the css', ->
     contents = fs.readFileSync(output_path, 'utf8')
-    contents.should.match /color: #f00;/
+    contents.should.match /<style type="text\/css">/
 
   it 'should include the javascript', ->
     contents = fs.readFileSync(output_path, 'utf8')
-    contents.should.match /console.log\('hello world'\);/
+    contents.should.match /<script type="text\/javascript">/
 
   after -> fs.unlinkSync(output_path)
