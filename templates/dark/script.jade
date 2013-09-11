@@ -1,2 +1,17 @@
 :coffeescript
-  console.log 'hello world'
+  $ ->
+
+    #
+    # keyboard navigation
+    #
+
+    next_slide = ->
+      $('#slides .slide').last().prependTo('#slides')
+
+    prev_slide = ->
+      $('#slides .slide').first().appendTo('#slides')
+
+    $(window).on 'keydown', (e) ->
+      switch e.keyCode
+        when 39 then next_slide()
+        when 37 then prev_slide()

@@ -12,7 +12,7 @@ class HTMLRenderer
     @markdown_contents = @file_contents.map((c) -> parser.render(c))
 
   render: ->
-    jade_fn = jade.compile(fs.readFileSync(@template, 'utf8'), filename: @template)
-    return jade_fn(slides: @markdown_contents)
+    jade_fn = jade.compile(fs.readFileSync(@template, 'utf8'), filename: @template, pretty: true)
+    return jade_fn(slides: @markdown_contents.reverse())
 
 module.exports = HTMLRenderer
