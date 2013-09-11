@@ -27,6 +27,8 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "should": "*"
+    "should": "*",
+    "zombie": "2.0.x",
+    "q": "*"
   }
 }
