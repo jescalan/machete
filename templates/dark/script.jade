@@ -2,14 +2,37 @@
   $ ->
 
     #
-    # keyboard navigation
+    # navigation
+    #
+
+    $.fn.currentSlide = ->
+      @removeClass().addClass 'current'
+      @prevAll().removeClass().addClass 'past'
+      @nextAll().removeClass().addClass 'future'
+      if @has('h3').length then @addClass 'pinned'
+
+    $.fn.next_loop = ->
+      $next = @next()
+      return $next if $next.length
+      @siblings().first()
+
+    $.fn.prev_loop = ->
+      $prev = @prev()
+      return $prev if $prev.length
+      @siblings().last()
+
+    $('#slides div').addClass 'future'
+    $('#slides div:first').currentSlide()
+
+    #
+    # keyboard triggers
     #
 
     next_slide = ->
-      $('#slides .slide').last().prependTo('#slides')
+      $('#slides .current').next_loop().currentSlide()
 
     prev_slide = ->
-      $('#slides .slide').first().appendTo('#slides')
+      $('#slides .current').prev_loop().currentSlide()
 
     $(window).on 'keydown', (e) ->
       switch e.keyCode

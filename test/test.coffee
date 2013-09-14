@@ -20,7 +20,7 @@ describe 'basic', ->
 
   it 'should contain compiled markdown', ->
     contents = fs.readFileSync(output_path, 'utf8')
-    contents.should.match /Introduction/
+    contents.should.match /Introducing/
     contents.should.match /Slide Two/
     contents.should.match /Slide Three/
 
@@ -47,10 +47,9 @@ describe 'javascript', ->
       done()
 
   it 'renders in the test browser', ->
-    $('.slide:last').text().should.match /Introduction/
+    $('.current').text().should.match /Introducing Machete/
 
-  it 'go to the next slide on right arrow', ->
-    e = $.Event('keydown')
-    e.keyCode = 39
-    $(window).trigger(e)
-    $('.slide:last').text().should.match /Slide Two/
+  it 'go to the next slide on right arrow'
+  it 'go to the previous slide on left arrow'
+
+  after -> fs.unlinkSync(output_path)
