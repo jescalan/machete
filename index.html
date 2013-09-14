@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Machete Test</title>
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,400italic" rel="stylesheet"><style type="text/css">html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 103.36%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  font-size-adjust: auto;
+}
+body {
+  color: #444;
+  font-family: Lato, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: #353535;
+  background: -moz-radial-gradient(center, ellipse cover, #353535 0%, #191919 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #353535), color-stop(100%, #191919));
+  background: -webkit-radial-gradient(center, ellipse cover, #353535 0%, #191919 100%);
+  background: -o-radial-gradient(center, ellipse cover, #353535 0%, #191919 100%);
+  background: -ms-radial-gradient(center, ellipse cover, #353535 0%, #191919 100%);
+  background: radial-gradient(ellipse at center, #353535 0%, #191919 100%);
+}
+#slides div {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: #fff;
+  display: table;
+  width: 65%;
+  max-width: 750px;
+}
+#slides div.pinned {
+  height: 80%;
+}
+#slides.none div.future,
+#slides.none div.past {
+  display: none;
+}
+#slides.fade div {
+  transition: opacity 0.5s ease, all 1s ease;
+}
+#slides.fade div.future,
+#slides.fade div.past {
+  opacity: 0;
+}
+#slides.slide.loaded div {
+  transition: left 0.5s ease;
+}
+#slides h1 {
+  text-align: center;
+  font-size: 3.3em;
+  margin: 0.5em 0;
+}
+#slides h2 {
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.3em;
+}
+#slides h3 {
+  font-size: 2em;
+  margin: 0 0 1em 0;
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+  padding-bottom: 0.5em;
+  text-align: center;
+  font-weight: 500;
+}
+#slides p,
+#slides li {
+  font-size: 1.2em;
+  line-height: 1.5em;
+}
+#slides a {
+  text-decoration: none;
+  color: #f0b963;
+  border-bottom: 1px solid transparent;
+  transition: all 0.3s ease;
+  padding-bottom: 2px;
+}
+#slides a:hover {
+  border-bottom: 1px solid #f0b963;
+}
+</style>
+  </head>
+  <body>
+    <div id="slides" class="slide">
+      <div><h1>Introducing Machete</h1>
+
+<h2>by <a href="#">Jeff Escalante</a></h2>
+</div>
+      <div><h3>Slide Two</h3>
+
+<p>here&#39;s some content</p>
+
+<ul>
+<li>point one</li>
+<li>point two</li>
+<li>point three</li>
+</ul>
+</div>
+      <div><h3>Slide Three</h3>
+
+<p>Wow look at this <a href="http://google.com">hyperlink</a> son!</p>
+</div>
+    </div>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js">   </script><script type="text/javascript">
+(function() {
+  $(function() {
+    var animation_hook, next_slide, pin_slides, prev_slide;
+    $.fn.currentSlide = function() {
+      this.removeClass('past future').addClass('current');
+      this.prevAll().removeClass('current future').addClass('past');
+      return this.nextAll().removeClass('current past').addClass('future');
+    };
+    $.fn.next_loop = function() {
+      var $next;
+      $next = this.next();
+      if ($next.length) {
+        return $next;
+      }
+      return this.siblings().first();
+    };
+    $.fn.prev_loop = function() {
+      var $prev;
+      $prev = this.prev();
+      if ($prev.length) {
+        return $prev;
+      }
+      return this.siblings().last();
+    };
+    next_slide = function() {
+      $('#slides .current').next_loop().currentSlide();
+      return animation_hook();
+    };
+    prev_slide = function() {
+      $('#slides .current').prev_loop().currentSlide();
+      return animation_hook();
+    };
+    $(window).on('keydown', function(e) {
+      switch (e.keyCode) {
+        case 39:
+          return next_slide();
+        case 37:
+          return prev_slide();
+      }
+    });
+    animation_hook = function() {
+      var slide_width;
+      switch ($('#slides').attr('class').split(' ')[0]) {
+        case 'slide':
+          slide_width = $('#slides div').width();
+          $('.future').css({
+            left: window.innerWidth + slide_width
+          });
+          $('.past').css({
+            left: -window.innerWidth - slide_width
+          });
+          $('.current').css({
+            left: 0
+          });
+      }
+      return setTimeout((function() {
+        return $('#slides').addClass('loaded');
+      }), 1);
+    };
+    pin_slides = function() {
+      var s, _i, _len, _ref, _results;
+      _ref = $('#slides div');
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        s = _ref[_i];
+        if ($(s).has('h3').length) {
+          _results.push($(s).addClass('pinned'));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+    $('#slides div').addClass('future');
+    $('#slides div:first').currentSlide();
+    pin_slides();
+    return animation_hook();
+  });
+
+}).call(this);
+</script>
+  </body>
+</html>
