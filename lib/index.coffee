@@ -14,7 +14,7 @@ class Machete
     slide_files = fs.readdirSync(@dir)
                     .filter((f) -> path.extname(f) == '.md')
                     .map((f) => path.join(@dir, f))
-    html_renderer = new HTMLRenderer(@config.template, slide_files)
+    html_renderer = new HTMLRenderer(@config, slide_files)
     fs.writeFileSync @output_path, html_renderer.render()
 
 

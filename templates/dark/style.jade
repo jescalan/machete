@@ -22,23 +22,39 @@
     background: -ms-radial-gradient(center, ellipse cover,  #353535 0%,#191919 100%)
     background: radial-gradient(ellipse at center,  #353535 0%,#191919 100%)
 
-  #slides div
-    position: absolute
-    margin: auto
-    top: 0
-    bottom: 0
-    left: 0
-    right: 0
-    color: #fff
-    display: table
-    width: 65%
-    max-width: 750px
+  #slides
 
-    &.future, &.past
-      display: none
+    div
+      position: fixed
+      margin: auto
+      top: 0
+      bottom: 0
+      left: 0
+      right: 0
+      color: #fff
+      display: table
+      width: 65%
+      max-width: 750px
 
-    &.pinned
-      height: 80%
+      &.pinned
+        height: 80%
+
+    //
+    // transition types
+    //
+
+    &.none div
+      &.future, &.past
+        display: none
+
+    // this still needs work
+    &.fade div
+      transition: opacity .5s ease, all 1s ease
+      &.future, &.past
+        opacity: 0
+
+    &.slide.loaded div
+      transition: left .5s ease
 
     h1
       text-align: center

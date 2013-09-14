@@ -13,24 +13,27 @@ browser = new Zombie()
 
 describe 'basic', ->
 
-  before -> machete.generate()
+  before ->
+    machete.generate()
+    @contents = fs.readFileSync(output_path, 'utf8')
 
   it 'should generate output file', ->
     fs.existsSync(output_path).should.be.ok
 
   it 'should contain compiled markdown', ->
-    contents = fs.readFileSync(output_path, 'utf8')
-    contents.should.match /Introducing/
-    contents.should.match /Slide Two/
-    contents.should.match /Slide Three/
+    @contents.should.match /Introducing/
+    @contents.should.match /Slide Two/
+    @contents.should.match /Slide Three/
 
   it 'should include the css', ->
-    contents = fs.readFileSync(output_path, 'utf8')
-    contents.should.match /<style type="text\/css">/
+    @contents.should.match /<style type="text\/css">/
 
   it 'should include the javascript', ->
-    contents = fs.readFileSync(output_path, 'utf8')
-    contents.should.match /<script type="text\/javascript">/
+    @contents.should.match /<script type="text\/javascript">/
+
+  # this should test with other config.yml files too
+  it 'should accurately reflect different transitions', ->
+    @contents.should.match /<div id="slides" class="slide/
 
   after -> fs.unlinkSync(output_path)
 
