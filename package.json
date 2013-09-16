@@ -23,7 +23,8 @@
     "coffee-script": "1.6.x",
     "jade": "0.35.x",
     "stylus": "0.37.x",
-    "js-yaml": "~2.1.0"
+    "js-yaml": "2.1.x",
+    "transformers": "2.1.x"
   },
   "devDependencies": {
     "mocha": "*",

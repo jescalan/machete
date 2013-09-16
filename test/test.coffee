@@ -26,10 +26,10 @@ describe 'basic', ->
     @contents.should.match /Slide Three/
 
   it 'should include the css', ->
-    @contents.should.match /<style type="text\/css">/
+    @contents.should.match /<style>html,/
 
   it 'should include the javascript', ->
-    @contents.should.match /<script type="text\/javascript">/
+    @contents.should.match /<script>\(function\(\) \{/
 
   # this should test with other config.yml files too
   it 'should accurately reflect different transitions', ->
