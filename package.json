@@ -25,7 +25,8 @@
     "stylus": "0.37.x",
     "js-yaml": "2.1.x",
     "transformers": "2.1.x",
-    "html-minifier": "0.5.x"
+    "html-minifier": "0.5.x",
+    "axis-css": "0.1.x"
   },
   "devDependencies": {
     "mocha": "*",

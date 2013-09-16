@@ -4,10 +4,9 @@ transformers = require 'transformers'
 
 # markup
 jade = transformers['jade']
-stylus = transformers['stylus']
+stylus = require 'stylus'
+axis = require 'axis-css'
 coffee = transformers['coffee']
-uglify_js = transformers['uglify-js']
-uglify_css = transformers['uglify-css']
 uglify_html = require('html-minifier').minify
 
 # markdown
@@ -39,9 +38,18 @@ class HTMLRenderer
       collapseBooleanAttributes: true
 
   render_css = ->
-    uglify_css.renderSync(stylus.renderFileSync(@css_template))
+    output = stylus(fs.readFileSync(@css_template, 'utf8'))
+      .set('filename', @css_template)
+      .use(axis())
+      .render()
+    transformers['uglify-css'].renderSync(output)
+
+    # this doesn't work due to a bug in transformers
+    # stylus.renderFileSync @css_template,
+    #   use: axis()
+    #   minify: true
 
   render_js = ->
-    uglify_js.renderSync(coffee.renderFileSync(@js_template))
+    coffee.renderFileSync(@js_template, { minify: true })
 
 module.exports = HTMLRenderer

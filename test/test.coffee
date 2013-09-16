@@ -26,7 +26,7 @@ describe 'basic', ->
     @contents.should.match /Slide Three/
 
   it 'should include the css', ->
-    @contents.should.match /<style>html,/
+    @contents.should.match /<style>article,aside/
 
   it 'should include the javascript', ->
     @contents.should.match /<script>\(function\(\)\{/
