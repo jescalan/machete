@@ -44,7 +44,7 @@ class HTMLRenderer
   render_css = ->
     output = stylus(fs.readFileSync(@css_template, 'utf8'))
       .set('filename', @css_template)
-      .use(axis())
+      .use(axis({implicit: false}))
       .render()
     transformers['uglify-css'].renderSync(output)
 
