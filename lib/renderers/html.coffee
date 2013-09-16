@@ -15,10 +15,12 @@ parser = new rs.Markdown.std([rs.EXT_TABLES, rs.EXT_AUTOLINK])
 
 class HTMLRenderer
 
+  # add option to minify or not?
   constructor: (@config, files) ->
     base_path = path.resolve("templates/#{@config.template || 'dark'}")
     @html_template = path.join(base_path, 'index.jade')
     @css_template = path.join(base_path, 'style.styl')
+    @base_js_template = path.resolve('templates/base/base.coffee')
     @js_template = path.join(base_path, 'script.coffee')
 
     file_contents = files.map((f) -> fs.readFileSync(f, 'utf8'))
@@ -44,12 +46,18 @@ class HTMLRenderer
       .render()
     transformers['uglify-css'].renderSync(output)
 
-    # this doesn't work due to a bug in transformers
-    # stylus.renderFileSync @css_template,
+    # eventually, this will be cleaned up and look as below
+    # issue ref: https://github.com/ForbesLindesay/transformers/issues/23
+    #
+    # transformers.stylus.renderFileSync @css_template,
     #   use: axis()
     #   minify: true
 
   render_js = ->
-    coffee.renderFileSync(@js_template, { minify: true })
+    output = "(function(){" +
+    coffee.renderFileSync(@base_js_template, { bare: true }) +
+    coffee.renderFileSync(@js_template, { bare: true }) +
+    "}).call(this);"
+    transformers['uglify-js'].renderSync(output)
 
 module.exports = HTMLRenderer

@@ -49,6 +49,7 @@ history: false # updates the url
 theme: 'dark' # options: dark, light
 primary_color: 'red' # any valid css color
 secondary_color: 'green' # same as above
+google_analytics: 'UA-XXXXXX' # for tracking
 ```
 
 ### Theming
