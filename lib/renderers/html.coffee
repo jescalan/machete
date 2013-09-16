@@ -29,9 +29,11 @@ class HTMLRenderer
   render: ->
     rendered_jade = jade.renderFileSync @html_template,
       slides: @markdown_contents
-      transition: @config.transition || 'slide'
       css: render_css.call(@)
       js: render_js.call(@)
+      title: @config.title || 'Slide Deck'
+      author: @config.author || 'Machete'
+      transition: @config.transition || 'slide'
 
     uglify_html rendered_jade,
       collapseWhitespace: true
