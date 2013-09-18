@@ -3,20 +3,21 @@ class Slideshow
   constructor: (@el) ->
     define_jquery_extensions()
     @init()
+    return { next: @next_slide, prev: @prev_slide }
 
   init: ->
-    $("#{@el} div").addClass('future')
-    $("#{@el} div:first").currentSlide()
+    $(@el).children().addClass('future')
+    $(@el).children().first().currentSlide()
     pin_slides.call(@)
     setup_keyboard_triggers.call(@)
     @animation_hook()
 
   next_slide: ->
-    $("#{@el} .current").next_loop().currentSlide()
+    $(@el).find('.current').next_loop().currentSlide()
     @animation_hook()
 
   prev_slide: ->
-    $("#{@el} .current").prev_loop().currentSlide()
+    $(@el).find('.current').prev_loop().currentSlide()
     @animation_hook()
 
   animation_hook: ->
@@ -27,10 +28,10 @@ class Slideshow
   # animation types
 
   slide_hook: ->
-    slide_width = $("#{@el} div").width()
-    $('.future').css(left: window.innerWidth + slide_width)
-    $('.past').css(left: -window.innerWidth - slide_width)
-    $('.current').css(left: 0)
+    slide_width = $(@el).children().width()
+    $(@el).find('.future').css(left: window.innerWidth + slide_width)
+    $(@el).find('.past').css(left: -window.innerWidth - slide_width)
+    $(@el).find('.current').css(left: 0)
 
   # @api private
 
@@ -58,5 +59,5 @@ class Slideshow
         when 37 then @prev_slide()
 
   pin_slides = ->
-    for s in $("#{@el} div")
+    for s in $(@el).children()
       if $(s).has('h3').length then $(s).addClass('pinned')

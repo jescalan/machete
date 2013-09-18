@@ -56,6 +56,8 @@ google_analytics: 'UA-XXXXXX' # for tracking
 
 So you want to get a little fancier and make your own theme? Seems like a lot of work, but if you're into it, that's cool. I guess you could just make it once then use it for all your presentations as your signature style. If you do want to add a theme, you can do this pretty easily. Check out the [templates folder](https://github.com/jenius/machete/tree/master/templates) to see how we render themes internally.
 
+#### Theme Files
+
 Machete themes are written with jade, stylus, and coffeescript to make life clean and easy. In your theme folder, you should have three files:
 
 - `index.jade`
@@ -86,7 +88,39 @@ Finally, `script.coffee`. There is a `Slideshow` class included automatically in
 new Slideshow('#slides')
 ```
 
-This class is incrdibly flexible, and exposes a nice clean public API as well. Details will follow in this section soon about how to create custom transition types, extend the class, and use the public API.
+And you can do whatever else you want in this script file as well.
+
+#### Javascript API
+
+The `Slideshow` class is incrdibly flexible, and exposes a nice clean public API as well. It's API is as follows:
+
+```coffee
+next() # go to the next slide
+prev() # go to the previous slide
+```
+
+Here's an example of potential usage:
+
+```coffee
+slideshow = new Slideshow('#slides')
+
+$('.next').on 'click', -> slideshow.next()
+$('.prev').on 'click', -> slideshow.prev()
+```
+
+You can also define custom transition types if you'd like to add your own. This can be done by extending the class and adding a method called `{transition_name}_hook`. A brief example is below, assuming that `custom_transition` is defined as the `transition` in `config.yml`.
+
+```coffee
+class MySlideshow extends Slideshow
+  custom_transition_hook: ->
+    # this hook is fired after classes are re-assigned
+    # you can make any css changes here to move the
+    # slides in and out the way you want.
+
+slideshow = new MySlideshow('#slides')
+```
+
+If there are any other requests or needs from the JS API, feel free to open an issue and/or pull request and make a suggestion!
 
 ### Contributing
 
