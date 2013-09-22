@@ -35,6 +35,9 @@ describe 'basic', ->
   it 'should accurately reflect different transitions', ->
     @contents.should.match /<div id="slides" class="slide/
 
+  it 'should accept primary color options'
+  it 'should accept secondary color options'
+
   after -> fs.unlinkSync(output_path)
 
 describe 'javascript', ->
@@ -56,3 +59,22 @@ describe 'javascript', ->
   it 'go to the previous slide on left arrow'
 
   after -> fs.unlinkSync(output_path)
+
+colors = require('../lib/util/colors')
+
+describe 'color converter', ->
+
+  it 'converts hex to rgba array', ->
+    colors.to_rgba_array('#ff0000').should.eql [255,0,0,1]
+
+  it 'converts shorthand hex to rgba array', ->
+    colors.to_rgba_array('#f00').should.eql [255,0,0,1]
+
+  it 'converts rgb to rgba array', ->
+    colors.to_rgba_array('rgb(255,0,0)').should.eql [255,0,0,1]
+
+  it 'converts rgba to rgba array', ->
+    colors.to_rgba_array('rgba(255,0,0,1)').should.eql [255,0,0,1]
+
+  it 'converts named color to rgba array', ->
+    colors.to_rgba_array('red').should.eql [255,0,0,1]

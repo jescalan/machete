@@ -1,6 +1,7 @@
 path = require 'path'
 fs = require 'fs'
 transformers = require 'transformers'
+color_converter = require '../util/colors'
 
 # markup
 jade = transformers['jade']
@@ -41,19 +42,34 @@ class HTMLRenderer
       removeComments: true
       collapseBooleanAttributes: true
 
+  #
+  # @api private
+  #
+
   render_css = ->
+    primary_color = to_stylus(@config.primary_color) || to_stylus('#292929')
+    secondary_color = to_stylus(@config.secondary_color) || to_stylus('#F0B963')
+
     output = stylus(fs.readFileSync(@css_template, 'utf8'))
       .set('filename', @css_template)
+      .define('primary', primary_color)
+      .define('secondary', secondary_color)
       .use(axis({implicit: false}))
       .render()
+
     transformers['uglify-css'].renderSync(output)
 
     # eventually, this will be cleaned up and look as below
     # issue ref: https://github.com/ForbesLindesay/transformers/issues/23
     #
     # transformers.stylus.renderFileSync @css_template,
-    #   use: axis()
+    #   use: axis({ implicit: false })
+    #   define: { primary: primary_color, secondary: secondary_color }
     #   minify: true
+
+  to_stylus = (color) ->
+    c = color_converter.to_rgba_array(color)
+    if !c then false else new stylus.nodes.RGBA(c[0], c[1], c[2], c[3])
 
   render_js = ->
     output = "(function(){" +
