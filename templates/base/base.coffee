@@ -55,8 +55,9 @@ class Slideshow
   setup_keyboard_triggers = ->
     $(window).on 'keydown', (e) =>
       switch e.keyCode
-        when 39 then @next_slide()
-        when 37 then @prev_slide()
+        when 32 then @next_slide() # space
+        when 39 then @next_slide() # right arrow
+        when 37 then @prev_slide() # left arrow
 
   pin_slides = ->
     for s in $(@el).children()
