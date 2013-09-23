@@ -11,6 +11,10 @@ setup = (dir) ->
   (new Machete(root)).generate()
   @contents = fs.readFileSync(@output, 'utf8')
 
+describe 'command line', ->
+
+  it 'new command should work correctly'
+
 describe 'basic', ->
 
   before -> setup.call(@, 'slides')

@@ -3,11 +3,17 @@
 require('coffee-script');
 var Machete = require('../lib'),
     path = require('path'),
+    ncp = require('ncp').ncp,
+    colors = require('colors'),
     argv = require('optimist').argv;
 
 switch(argv._[0]){
   case 'new':
-    console.log('creating scaffold...'); break;
+    ncp(path.resolve('./templates/new'), path.join(process.cwd(), argv._[1]), function(err){
+      if (err) return console.error(err);
+      console.log('template created'.green);
+    });
+    break;
   case 'deploy':
     console.log('deploying...'); break;
   default:

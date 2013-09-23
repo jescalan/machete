@@ -26,7 +26,9 @@
     "js-yaml": "2.1.x",
     "transformers": "2.1.x",
     "html-minifier": "0.5.x",
-    "axis-css": "0.1.x"
+    "axis-css": "0.1.x",
+    "ncp": "0.4.x",
+    "colors": "0.6.x"
   },
   "devDependencies": {
     "mocha": "*",
