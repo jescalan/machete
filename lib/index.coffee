@@ -7,7 +7,8 @@ class Machete
 
   constructor: (dir) ->
     @dir = dir || process.cwd()
-    @config = require path.join(@dir, 'config.yml')
+    config_path = path.join(@dir, 'config.yml')
+    @config = if fs.existsSync(config_path) then require(config_path) else {}
     @output_path = if @config.output_path then path.join(@dir, @config.output_path) else path.join(@dir, 'slideshow.html')
 
   generate: ->

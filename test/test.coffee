@@ -3,22 +3,20 @@ fs = require 'fs'
 should = require 'should'
 Machete = require '../lib'
 Zombie = require 'zombie'
-
-test_dir = path.resolve('test/slides')
-output_path = path.join(test_dir, 'slideshow.html')
-test_url = "file://#{output_path}"
-
-machete = new Machete(test_dir)
 browser = new Zombie()
+
+setup = (dir) ->
+  root = path.resolve("test/#{dir}")
+  @output = path.join(root, 'slideshow.html')
+  (new Machete(root)).generate()
+  @contents = fs.readFileSync(@output, 'utf8')
 
 describe 'basic', ->
 
-  before ->
-    machete.generate()
-    @contents = fs.readFileSync(output_path, 'utf8')
+  before -> setup.call(@, 'slides')
 
   it 'should generate output file', ->
-    fs.existsSync(output_path).should.be.ok
+    fs.existsSync(@output).should.be.ok
 
   it 'should contain compiled markdown', ->
     @contents.should.match /Introducing/
@@ -35,37 +33,21 @@ describe 'basic', ->
   it 'should accurately reflect different transitions', ->
     @contents.should.match /<div id="slides" class="slide/
 
-  it 'should accept primary color options'
-  it 'should accept secondary color options'
-  it 'should go to the correct slide according to the url hash'
-  it 'should hash the url when going to the next slide'
-  it 'should has the url when going to the previous slide'
-  it 'should navigate correctly on forward and back buttons'
+  after -> fs.unlinkSync(@output)
 
-  after -> fs.unlinkSync(output_path)
+describe 'color configuration', ->
 
-describe 'javascript', ->
+  before -> setup.call(@, 'colors')
 
-  window = null
-  $ = null
+  it 'should accept primary color options', ->
+    @contents.should.match /#6f0000/
 
-  before (done) ->
-    machete.generate()
-    browser.visit(test_url).then(browser.wait.bind(browser)).then ->
-      window = browser.document.window
-      $ = window.jQuery
-      done()
+  it 'should accept secondary color options', ->
+    @contents.should.match /#ffa500/
 
-  it 'renders in the test browser', ->
-    $('.current').text().should.match /Introducing Machete/
-
-  it 'go to the next slide on right arrow'
-  it 'go to the previous slide on left arrow'
-
-  after -> fs.unlinkSync(output_path)
+  after -> fs.unlinkSync(@output)
 
 colors = require('../lib/util/colors')
-
 describe 'color converter', ->
 
   it 'converts hex to rgba array', ->
@@ -82,3 +64,27 @@ describe 'color converter', ->
 
   it 'converts named color to rgba array', ->
     colors.to_rgba_array('red').should.eql [255,0,0,1]
+
+describe 'javascript', ->
+  window = null
+  $ = null
+
+  before (done) ->
+    setup.call(@, 'slides')
+    @test_url = "file://#{@output}"
+    browser.visit(@test_url).then(browser.wait.bind(browser)).then ->
+      window = browser.document.window
+      $ = window.jQuery
+      done()
+
+  it 'renders in the test browser', ->
+    $('.current').text().should.match /Introducing Machete/
+
+  it 'go to the next slide on right arrow'
+  it 'go to the previous slide on left arrow'
+  it 'should go to the correct slide according to the url hash'
+  it 'should hash the url when going to the next slide'
+  it 'should has the url when going to the previous slide'
+  it 'should navigate correctly on forward and back buttons'
+
+  after -> fs.unlinkSync(@output)

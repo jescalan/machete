@@ -95,8 +95,10 @@ And you can do whatever else you want in this script file as well.
 The `Slideshow` class is incrdibly flexible, and exposes a nice clean public API as well. It's API is as follows:
 
 ```coffee
+total_slides # total number of slides (int)
 next() # go to the next slide
 prev() # go to the previous slide
+go_to(2) # go to slide (int)
 ```
 
 Here's an example of potential usage:
@@ -106,6 +108,7 @@ slideshow = new Slideshow('#slides')
 
 $('.next').on 'click', -> slideshow.next()
 $('.prev').on 'click', -> slideshow.prev()
+$('.last_slide').on 'click', -> slideshow.go_to(total_slides)
 ```
 
 You can also define custom transition types if you'd like to add your own. This can be done by extending the class and adding a method called `{transition_name}_hook`. A brief example is below, assuming that `custom_transition` is defined as the `transition` in `config.yml`.
