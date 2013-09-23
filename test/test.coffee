@@ -37,6 +37,10 @@ describe 'basic', ->
 
   it 'should accept primary color options'
   it 'should accept secondary color options'
+  it 'should go to the correct slide according to the url hash'
+  it 'should hash the url when going to the next slide'
+  it 'should has the url when going to the previous slide'
+  it 'should navigate correctly on forward and back buttons'
 
   after -> fs.unlinkSync(output_path)
 

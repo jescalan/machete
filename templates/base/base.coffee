@@ -8,16 +8,27 @@ class Slideshow
   init: ->
     $(@el).children().addClass('future')
     $(@el).children().first().currentSlide()
+    @state = 1
+    @total_slides = $(@el).children().length
     pin_slides.call(@)
     setup_keyboard_triggers.call(@)
+    setup_state_reader.call(@)
     @animation_hook()
 
   next_slide: ->
     $(@el).find('.current').next_loop().currentSlide()
     @animation_hook()
+    push_state.call(@)
 
   prev_slide: ->
     $(@el).find('.current').prev_loop().currentSlide()
+    @animation_hook()
+    pop_state.call(@)
+
+  go_to: (num) ->
+    if num > @total_slides then return
+    @state = num || 1
+    $($(@el).children()[@state-1]).currentSlide()
     @animation_hook()
 
   animation_hook: ->
@@ -62,3 +73,21 @@ class Slideshow
   pin_slides = ->
     for s in $(@el).children()
       if $(s).has('h3').length then $(s).addClass('pinned')
+
+  setup_state_reader = ->
+    window.onpopstate = => @go_to(read_state())
+
+  read_state = ->
+    url = document.createElement 'a'
+    url.href = window.location.href
+    parseInt(url.hash.slice(1))
+
+  push_state = ->
+    if !history.pushState then return
+    if @state + 1 > @total_slides then @state = 1 else @state++
+    history.pushState({ slide: @state }, '', "##{@state}")
+
+  pop_state = ->
+    if !history.pushState then return
+    if @state - 1 < 1 then @state = @total_slides else @state--
+    history.pushState({ slide: @state }, '', "##{@state}")
