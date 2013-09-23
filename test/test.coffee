@@ -86,5 +86,6 @@ describe 'javascript', ->
   it 'should hash the url when going to the next slide'
   it 'should has the url when going to the previous slide'
   it 'should navigate correctly on forward and back buttons'
+  it 'should not use pushstate if history is false in config.yml'
 
   after -> fs.unlinkSync(@output)

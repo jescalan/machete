@@ -72,7 +72,10 @@ class HTMLRenderer
     if !c then false else new stylus.nodes.RGBA(c[0], c[1], c[2], c[3])
 
   render_js = ->
+    history_enabled = if typeof @config.history != 'undefined' then @config.history else true
+
     output = "(function(){" +
+    "var history_enabled = " + history_enabled + ";" +
     coffee.renderFileSync(@base_js_template, { bare: true }) +
     coffee.renderFileSync(@js_template, { bare: true }) +
     "}).call(this);"

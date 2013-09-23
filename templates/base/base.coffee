@@ -83,11 +83,11 @@ class Slideshow
     parseInt(url.hash.slice(1))
 
   push_state = ->
-    if !history.pushState then return
+    if !history.pushState || !history_enabled then return
     if @state + 1 > @total_slides then @state = 1 else @state++
     history.pushState({ slide: @state }, '', "##{@state}")
 
   pop_state = ->
-    if !history.pushState then return
+    if !history.pushState || !history_enabled then return
     if @state - 1 < 1 then @state = @total_slides else @state--
     history.pushState({ slide: @state }, '', "##{@state}")
