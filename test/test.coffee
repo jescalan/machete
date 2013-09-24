@@ -4,6 +4,7 @@ should = require 'should'
 Machete = require '../lib'
 Zombie = require 'zombie'
 browser = new Zombie()
+require 'shelljs/global'
 
 setup = (dir) ->
   root = path.resolve("test/#{dir}")
@@ -13,7 +14,10 @@ setup = (dir) ->
 
 describe 'command line', ->
 
-  it 'new command should work correctly'
+  it 'new command should work correctly', ->
+    exec('cd test; ../bin/machete new example').code.should.be.ok
+
+  after -> rm '-rf', path.resolve('test/example')
 
 describe 'basic', ->
 
@@ -91,5 +95,6 @@ describe 'javascript', ->
   it 'should has the url when going to the previous slide'
   it 'should navigate correctly on forward and back buttons'
   it 'should not use pushstate if history is false in config.yml'
+  it 'should hilight syntax on code blocks'
 
   after -> fs.unlinkSync(@output)

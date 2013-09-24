@@ -13,6 +13,7 @@ class Slideshow
     pin_slides.call(@)
     setup_keyboard_triggers.call(@)
     setup_state_reader.call(@)
+    if hljs then hljs.initHighlightingOnLoad()
     @animation_hook()
 
   next_slide: ->

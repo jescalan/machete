@@ -18,10 +18,10 @@ class HTMLRenderer
 
   # add option to minify or not?
   constructor: (@config, files) ->
-    base_path = path.resolve("templates/#{@config.template || 'dark'}")
+    base_path = path.join(__dirname, "../../templates/#{@config.template || 'dark'}")
+    @base_js_template = path.join(__dirname, '../../templates/base/base.coffee')
     @html_template = path.join(base_path, 'index.jade')
     @css_template = path.join(base_path, 'style.styl')
-    @base_js_template = path.resolve('templates/base/base.coffee')
     @js_template = path.join(base_path, 'script.coffee')
 
     file_contents = files.map((f) -> fs.readFileSync(f, 'utf8'))

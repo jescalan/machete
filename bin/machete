@@ -9,18 +9,28 @@ var Machete = require('../lib'),
 
 switch(argv._[0]){
   case 'new':
-    ncp(path.resolve('./templates/new'), path.join(process.cwd(), argv._[1]), function(err){
-      if (err) return console.error(err);
-      console.log('template created'.green);
-    });
-    break;
+    create(argv._[1]); break;
   case 'deploy':
     console.log('deploying...'); break;
   default:
-    generate(path.resolve(argv._[0]) || process.cwd())
+    generate(path.resolve(argv._[0] || process.cwd()));
 }
 
 function generate(dir){
   var machete = new Machete(dir);
   machete.generate();
+  process.exit(1);
+}
+
+function create(name){
+  if (!name) return console.error('your new project needs a name!'.red)
+
+  var source = path.join(__dirname, '../templates/new');
+  var destination = path.join(process.cwd(), name);
+
+  ncp(source, destination, function(err){
+    if (err) return console.error(err);
+    console.log('template created'.green);
+    process.exit(1);
+  });
 }
