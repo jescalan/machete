@@ -1,51 +1,56 @@
 class Slideshow
 
-  constructor: (@el) ->
+  constructor: (@el, TransitionClass) ->
+    # general prep
+    inject_vendor_scripts()
     define_jquery_extensions()
-    @init()
-    return { next: @next_slide, prev: @prev_slide }
 
-  init: ->
+    # set up the slide classes
     $(@el).children().addClass('future')
     $(@el).children().first().currentSlide()
-    @state = 1
     @total_slides = $(@el).children().length
-    pin_slides.call(@)
-    setup_keyboard_triggers.call(@)
-    setup_state_reader.call(@)
-    if hljs then hljs.initHighlightingOnLoad()
-    @animation_hook()
+
+    # set up the transition type
+    transition_name = $(@el).attr('class').split(' ')[0]
+    TransitionClass ?= mch_ctx["#{titleCase(transition_name)}Transition"]
+
+    # set up everything else
+    @state = new StateController(@)
+    @processor = new SlideProcessor(@)
+    @transition = new TransitionClass(@)
+    @triggers = new KeyboardTriggers(@)
+    @highlighter = new CodeHighlighter(@)
+
+    # misc setup functions
+    @processor.pin_slides()
+    @transition.hook()
+
+    # return public api
+    return { next: @next_slide, prev: @prev_slide, current: $(@el).find('.current') }
 
   next_slide: ->
     $(@el).find('.current').next_loop().currentSlide()
-    @animation_hook()
-    push_state.call(@)
+    @transition.hook()
+    @state.push()
 
   prev_slide: ->
     $(@el).find('.current').prev_loop().currentSlide()
-    @animation_hook()
-    pop_state.call(@)
+    @transition.hook()
+    @state.pop()
 
   go_to: (num) ->
     if num > @total_slides then return
-    @state = num || 1
-    $($(@el).children()[@state-1]).currentSlide()
-    @animation_hook()
-
-  animation_hook: ->
-    transition_name = $(@el).attr('class').split(' ')[0]
-    @["#{transition_name}_hook"]() if @["#{transition_name}_hook"]
-    setTimeout (=> $(@el).addClass('loaded')), 1
-
-  # animation types
-
-  slide_hook: ->
-    slide_width = $(@el).children().width()
-    $(@el).find('.future').css(left: window.innerWidth + slide_width)
-    $(@el).find('.past').css(left: -window.innerWidth - slide_width)
-    $(@el).find('.current').css(left: 0)
+    @state.current = num
+    $($(@el).children()[@state.current-1]).currentSlide()
+    @transition.hook()
 
   # @api private
+
+  titleCase = (str) ->
+    str.replace(/\w\S*/g, (t) -> t.charAt(0).toUpperCase() + t.substr(1).toLowerCase())
+
+  inject_vendor_scripts = ->
+    # make sure jquery, hammer, etc. are present
 
   define_jquery_extensions = ->
 
@@ -64,31 +69,92 @@ class Slideshow
       return $prev if $prev.length
       @siblings().last()
 
-  setup_keyboard_triggers = ->
-    $(window).on 'keydown', (e) =>
-      switch e.keyCode
-        when 32 then @next_slide() # space
-        when 39 then @next_slide() # right arrow
-        when 37 then @prev_slide() # left arrow
+#
+# handles animation between slides
+#
 
-  pin_slides = ->
-    for s in $(@el).children()
+class @Transition
+
+  constructor: (@slideshow) ->
+    @el = $(@slideshow.el)
+
+  hook: ->
+    if !@el.hasClass('loaded') then setTimeout (=> @el.addClass('loaded')), 1
+
+#
+# slide transition
+#
+
+class @SlideTransition extends @Transition
+
+  hook: ->
+    slide_width = $(@el).children().width()
+    $(@el).find('.future').css(left: window.innerWidth + slide_width)
+    $(@el).find('.past').css(left: -window.innerWidth - slide_width)
+    $(@el).find('.current').css(left: 0)
+    super()
+
+#
+# sets up and configures code highlighting
+#
+
+class CodeHighlighter
+
+  # TODO: load hljs if not present
+  # TODO: this should take options to define stylesheet, etc
+  constructor: (@slideshow) ->
+    if hljs then hljs.initHighlightingOnLoad()
+
+#
+# processes slides, applies special treatment to special types
+#
+
+class SlideProcessor
+  constructor: (@slideshow) ->
+
+  pin_slides: ->
+    for s in $(@slideshow.el).children()
       if $(s).has('h3').length then $(s).addClass('pinned')
 
-  setup_state_reader = ->
-    window.onpopstate = => @go_to(read_state())
+#
+# binds key presses to actions
+#
 
-  read_state = ->
+class KeyboardTriggers
+  constructor: (@slideshow) ->
+    $(window).on 'keydown', (e) =>
+      switch e.keyCode
+        when 32 then space.call(@)
+        when 39 then right_arrow.call(@)
+        when 37 then left_arrow.call(@)
+
+  # @api private
+
+  space = -> @slideshow.next_slide()
+  left_arrow = -> @slideshow.prev_slide()
+  right_arrow = -> @slideshow.next_slide()
+
+#
+# maps between the URL and slideshow
+#
+
+class StateController
+  constructor: (@slideshow) ->
     url = document.createElement 'a'
     url.href = window.location.href
-    parseInt(url.hash.slice(1))
+    @current = parseInt(url.hash.slice(1)) || 1
+    window.onpopstate = => @slideshow.go_to(@current)
 
-  push_state = ->
-    if !history.pushState || !history_enabled then return
-    if @state + 1 > @total_slides then @state = 1 else @state++
-    history.pushState({ slide: @state }, '', "##{@state}")
+  push: ->
+    if disabled() then return
+    if @current + 1 > @slideshow.total_slides then @current = 1 else @current++
+    history.pushState({ slide: @current }, '', "##{@current}")
 
-  pop_state = ->
-    if !history.pushState || !history_enabled then return
-    if @state - 1 < 1 then @state = @total_slides else @state--
-    history.pushState({ slide: @state }, '', "##{@state}")
+  pop: ->
+    if disabled() then return
+    if @current - 1 < 1 then @current = @slideshow.total_slides else @current--
+    history.pushState({ slide: @current }, '', "##{@current}")
+
+  # @api private
+
+  disabled = -> !history.pushState || !history_enabled

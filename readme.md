@@ -111,16 +111,16 @@ $('.prev').on 'click', -> slideshow.prev()
 $('.last_slide').on 'click', -> slideshow.go_to(total_slides)
 ```
 
-You can also define custom transition types if you'd like to add your own. This can be done by extending the class and adding a method called `{transition_name}_hook`. A brief example is below, assuming that `custom_transition` is defined as the `transition` in `config.yml`.
+You can also define custom transition types if you'd like to add your own. This can be done by extending the `Transition` class and adding a method called `hook`. A brief example is below:
 
 ```coffee
-class MySlideshow extends Slideshow
-  custom_transition_hook: ->
+class MyTransition extends @Transition
+  hook: ->
     # this hook is fired after classes are re-assigned
     # you can make any css changes here to move the
     # slides in and out the way you want.
 
-slideshow = new MySlideshow('#slides')
+slideshow = new MySlideshow('#slides', MyTransition)
 ```
 
 If there are any other requests or needs from the JS API, feel free to open an issue and/or pull request and make a suggestion!

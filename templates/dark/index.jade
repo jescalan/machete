@@ -7,8 +7,9 @@ html
     meta(name='author', content=author)
     title= title
     link(href='http://fonts.googleapis.com/css?family=Lato:300,400,700,400italic', rel='stylesheet')
-    style!= css
     link(href='http://yandex.st/highlightjs/7.3/styles/tomorrow-night.min.css', rel='stylesheet')
+    style!= css
+    
   body
 
     #slides(class=transition)
@@ -16,5 +17,6 @@ html
         div!= slide
 
     script(src='http://yandex.st/highlightjs/7.3/highlight.min.js')
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/hammer.js/1.0.5/hammer.min.js')
     script(src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js')    
     script!= js

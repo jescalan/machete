@@ -35,7 +35,7 @@ describe 'basic', ->
     @contents.should.match /<style>article,aside/
 
   it 'should include the javascript', ->
-    @contents.should.match /<script>\(function\(\)\{/
+    @contents.should.match /<script>function/
 
   # this should test with other config.yml files too
   it 'should accurately reflect different transitions', ->

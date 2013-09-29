@@ -74,11 +74,11 @@ class HTMLRenderer
   render_js = ->
     history_enabled = if typeof @config.history != 'undefined' then @config.history else true
 
-    output = "(function(){" +
+    output = "function MacheteContext(){" +
     "var history_enabled = " + history_enabled + ";" +
     coffee.renderFileSync(@base_js_template, { bare: true }) +
     coffee.renderFileSync(@js_template, { bare: true }) +
-    "}).call(this);"
+    "}; mch_ctx = new MacheteContext;"
     transformers['uglify-js'].renderSync(output)
 
 module.exports = HTMLRenderer
