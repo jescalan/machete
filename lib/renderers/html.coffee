@@ -2,6 +2,7 @@ path = require 'path'
 fs = require 'fs'
 transformers = require 'transformers'
 color_converter = require '../util/colors'
+colors = require 'colors'
 
 # markup
 jade = transformers['jade']
@@ -19,7 +20,7 @@ class HTMLRenderer
   # add option to minify or not?
   constructor: (@config, files) ->
     base_path = path.join(__dirname, "../../templates/#{@config.template || 'dark'}")
-    @base_js_template = path.join(__dirname, '../../templates/base/base.coffee')
+    @base_js_path = path.join(__dirname, '../../templates/base')
     @html_template = path.join(base_path, 'index.jade')
     @css_template = path.join(base_path, 'style.styl')
     @js_template = path.join(base_path, 'script.coffee')
@@ -28,6 +29,9 @@ class HTMLRenderer
     @markdown_contents = file_contents.map((c) -> parser.render(c))
 
   render: ->
+
+    process.stdout.write 'generating... '.grey
+
     rendered_jade = jade.renderFileSync @html_template,
       slides: @markdown_contents
       css: render_css.call(@)
@@ -36,11 +40,15 @@ class HTMLRenderer
       author: @config.author || 'Machete'
       transition: @config.transition || 'slide'
 
-    uglify_html rendered_jade,
+    output = uglify_html rendered_jade,
       collapseWhitespace: true
       removeIgnored: true
       removeComments: true
       collapseBooleanAttributes: true
+
+    console.log 'done!'.green
+
+    return output
 
   #
   # @api private
@@ -75,10 +83,31 @@ class HTMLRenderer
     history_enabled = if typeof @config.history != 'undefined' then @config.history else true
 
     output = "function MacheteContext(){" +
-    "var history_enabled = " + history_enabled + ";" +
-    coffee.renderFileSync(@base_js_template, { bare: true }) +
-    coffee.renderFileSync(@js_template, { bare: true }) +
-    "}; mch_ctx = new MacheteContext;"
+      # configuration variables
+      include_variable('history_enabled', history_enabled) +
+
+      # base modules
+      include_coffee.call(@, 'slideshow.coffee') +
+      include_coffee.call(@, 'code_highlighter.coffee') +
+      include_coffee.call(@, 'keyboard_triggers.coffee') +
+      include_coffee.call(@, 'slide_processor.coffee') +
+      include_coffee.call(@, 'state_controller.coffee') +
+      include_coffee.call(@, 'transition.coffee') +
+
+      # transition types
+      include_coffee.call(@, 'transitions/slide.coffee') +
+
+      # include custom theme js
+      coffee.renderFileSync(@js_template, { bare: true }) +
+
+      "}; mch_ctx = new MacheteContext;"
+
     transformers['uglify-js'].renderSync(output)
+
+  include_coffee = (p) ->
+    return coffee.renderFileSync(path.join(@base_js_path, p), { bare: true })
+
+  include_variable = (name, v) ->
+    "var #{name} = #{v};"
 
 module.exports = HTMLRenderer
