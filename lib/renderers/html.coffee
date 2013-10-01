@@ -63,11 +63,13 @@ class HTMLRenderer
   render_css = ->
     primary_color = to_stylus(@config.primary_color) || to_stylus('#292929')
     secondary_color = to_stylus(@config.secondary_color) || to_stylus('#F0B963')
+    arrow_controls = default_var(@config.controls, true)
 
     output = stylus(fs.readFileSync(@css_template, 'utf8'))
       .set('filename', @css_template)
       .define('primary', primary_color)
       .define('secondary', secondary_color)
+      .define('controls', arrow_controls)
       .use(axis({implicit: false}))
       .render()
 

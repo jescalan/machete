@@ -16,6 +16,34 @@ body
   font-family: Lato, sans-serif
   background: radial-gradient(lighten(primary, 10%), darken(primary, 20%))
 
+#controls
+  display: none if !controls
+
+  & > div
+    color: white
+    fs: 3em
+    position: absolute
+    top: 48%
+    opacity: .15
+    transition()
+    cursor: pointer
+    background: #000
+    size: 50px
+    rounded()
+    line-height: 80%
+    text-align: center
+
+    &:hover
+      opacity: .5
+
+  .left
+    left: 5%
+    padding: 1px 1px 0 0
+
+  .right
+    right: 5%
+    padding: 1px 0 2px 3px
+
 #slides
 
   div

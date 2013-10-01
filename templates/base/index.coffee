@@ -31,6 +31,9 @@ class Slideshow
     @highlighter = new CodeHighlighter(@)
     @mobile = new MobileHandler(@)
 
+    $('#controls .left').on 'click', => @prev_slide()
+    $('#controls .right').on 'click', => @next_slide()
+
     # misc setup functions
     @processor.pin_slides()
     @transition.hook()
