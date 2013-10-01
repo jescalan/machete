@@ -17,4 +17,4 @@ class StateController
 
   # @api private
 
-  disabled = -> !history.pushState || !history_enabled
+  disabled = -> !history.pushState || !mch_ctx.history_enabled
