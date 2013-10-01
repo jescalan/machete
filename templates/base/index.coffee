@@ -61,6 +61,10 @@ class Slideshow
   current: ->
     $(@el).find('.current')
 
+  # aliases
+  prev: -> @prev_slide()
+  next: -> @next_slide()
+
   #
   # @api private
   #
