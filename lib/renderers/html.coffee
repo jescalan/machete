@@ -86,11 +86,13 @@ class HTMLRenderer
     if !c then false else new stylus.nodes.RGBA(c[0], c[1], c[2], c[3])
 
   render_js = ->
-    history_enabled = if typeof @config.history != 'undefined' then @config.history else true
+    history_enabled = default_var(@config.history, true)
+    touch_enabled = default_var(@config.mobile, true)
 
     output = "function MacheteContext(){" +
       # configuration variables
       include_variable('history_enabled', history_enabled) +
+      include_variable('touch_enabled', touch_enabled) +
       # base js
       snockets.getConcatenation(@base_js_path, { minify: true, async: false }) + ";" +
       # theme js
@@ -100,6 +102,9 @@ class HTMLRenderer
     transformers['uglify-js'].renderSync(output)
 
   include_variable = (name, v) ->
-    "var #{name} = #{v};"
+    "this.#{name} = #{v};"
+
+  default_var = (_var, _default) ->
+    if typeof _var != 'undefined' then _var else _default
 
 module.exports = HTMLRenderer

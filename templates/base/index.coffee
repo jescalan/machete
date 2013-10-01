@@ -2,6 +2,7 @@
 #= require 'keyboard_triggers'
 #= require 'slide_processor'
 #= require 'state_controller'
+#= require 'mobile_handler'
 #= require 'transition'
 
 #= require 'transitions/slide'
@@ -28,6 +29,7 @@ class Slideshow
     @transition = new TransitionClass(@)
     @triggers = new KeyboardTriggers(@)
     @highlighter = new CodeHighlighter(@)
+    @mobile = new MobileHandler(@)
 
     # misc setup functions
     @processor.pin_slides()
