@@ -4,3 +4,5 @@ author: 'John Doe'
 # primary_color: 'red'
 # secondary_color: '#00f'
 # history: false
+# touch: false
+# controls: false

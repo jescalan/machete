@@ -23,7 +23,6 @@ snockets = new Snockets
 
 class HTMLRenderer
 
-  # add option to minify or not?
   constructor: (@config, files) ->
     base_path = path.join(__dirname, "../../templates/#{@config.template || 'dark'}")
     @base_js_path = path.join(__dirname, '../../templates/base/index.coffee')
@@ -35,7 +34,6 @@ class HTMLRenderer
     @markdown_contents = file_contents.map((c) -> parser.render(c))
 
   render: ->
-
     process.stdout.write 'generating... '.grey
 
     rendered_jade = jade.renderFileSync @html_template,
@@ -53,7 +51,6 @@ class HTMLRenderer
       collapseBooleanAttributes: true
 
     console.log 'done!'.green
-
     return output
 
   #
@@ -88,15 +85,12 @@ class HTMLRenderer
     if !c then false else new stylus.nodes.RGBA(c[0], c[1], c[2], c[3])
 
   render_js = ->
-    history_enabled = default_var(@config.history, true)
-    touch_enabled = default_var(@config.mobile, true)
-
     output = "function MacheteContext(){" +
       # configuration variables
-      include_variable('history_enabled', history_enabled) +
-      include_variable('touch_enabled', touch_enabled) +
+      include_variable('history_enabled', default_var(@config.history, true)) +
+      include_variable('touch_enabled', default_var(@config.mobile, true)) +
       # base js
-      snockets.getConcatenation(@base_js_path, { minify: true, async: false }) + ";" +
+      snockets.getConcatenation(@base_js_path, { async: false }) + ";" +
       # theme js
       coffee.renderFileSync(@js_template, { bare: true }) +
       "}; mch_ctx = new MacheteContext;"

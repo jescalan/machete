@@ -88,13 +88,18 @@ describe 'javascript', ->
   it 'renders in the test browser', ->
     $('.current').text().should.match /Introducing Machete/
 
-  it 'go to the next slide on right arrow'
-  it 'go to the previous slide on left arrow'
+  it 'should go to the next slide on right arrow'
+  it 'should go to the previous slide on left arrow'
+  it 'should do to the next slide on swipe right'
+  it 'should do to the previous slide on swipe left'
+
   it 'should go to the correct slide according to the url hash'
   it 'should hash the url when going to the next slide'
   it 'should has the url when going to the previous slide'
   it 'should navigate correctly on forward and back buttons'
-  it 'should not use pushstate if history is false in config.yml'
   it 'should hilight syntax on code blocks'
+  
+  it 'should not use pushstate if history is false in config.yml'
+  it 'should not use swipe events if touch is false in config.yml'
 
   after -> fs.unlinkSync(@output)

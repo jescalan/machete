@@ -1,3 +1,3 @@
 --reporter spec
 --compilers coffee:coffee-script
---timeout 4000
+--timeout 994000
