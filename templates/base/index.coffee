@@ -31,6 +31,7 @@ class Slideshow
     @highlighter = new CodeHighlighter(@)
     @mobile = new MobileHandler(@)
 
+    # arrow controls
     $('#controls .left').on 'click', => @prev_slide()
     $('#controls .right').on 'click', => @next_slide()
 
@@ -39,15 +40,15 @@ class Slideshow
     @transition.hook()
 
     # return public api
-    return { next: @next_slide, prev: @prev_slide, current: $(@el).find('.current') }
+    return @
 
   next_slide: ->
-    $(@el).find('.current').next_loop().currentSlide()
+    @current().next_loop().currentSlide()
     @transition.hook()
     @state.push()
 
   prev_slide: ->
-    $(@el).find('.current').prev_loop().currentSlide()
+    @current().prev_loop().currentSlide()
     @transition.hook()
     @state.pop()
 
@@ -56,6 +57,9 @@ class Slideshow
     @state.current = num
     $($(@el).children()[@state.current-1]).currentSlide()
     @transition.hook()
+
+  current: ->
+    $(@el).find('.current')
 
   #
   # @api private

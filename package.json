@@ -1,7 +1,7 @@
 {
   "name": "machete",
   "preferGlobal": true,
-  "version": "0.0.2-alpha",
+  "version": "0.0.3-alpha",
   "author": "Jeff Escalante <hello@jenius.me>",
   "description": "fast, beautiful markdown slideshows",
   "keywords": [

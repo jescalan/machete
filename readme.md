@@ -54,7 +54,7 @@ google_analytics: 'UA-XXXXXX' # for tracking
 
 ### Theming
 
-So you want to get a little fancier and make your own theme? Seems like a lot of work, but if you're into it, that's cool. I guess you could just make it once then use it for all your presentations as your signature style. If you do want to add a theme, you can do this pretty easily. Check out the [templates folder](https://github.com/jenius/machete/tree/master/templates) to see how we render themes internally.
+So you want to get a little fancier and make your own theme? Seems like a lot of work, but if you're into it, that's cool. I guess you could just make it once then use it for all your presentations as your signature style. If you do want to add a theme, you can do this pretty easily. Check out the [default theme](https://github.com/jenius/machete/tree/master/templates/dark) to see how we render themes internally.
 
 #### Theme Files
 
@@ -80,6 +80,7 @@ Next up is `style.styl`. This is a stylus file that comes with [axis](https://gi
 ```yaml
 primary_color # => main presentation color
 secondary_color # => slightly less important color
+controls # => boolean, whether controls should be displayed or not
 ```
 
 Finally, `script.coffee`. There is a `Slideshow` class included automatically in all themes which takes care of the basic setup, transitioning between slides, and other stuff you probably don't want to replicate. In order to initialize the slideshow, you need to instantiate a `Slideshow` object, passing it the element that contains your slides, as such:
@@ -96,6 +97,7 @@ The `Slideshow` class is incrdibly flexible, and exposes a nice clean public API
 
 ```coffee
 total_slides # total number of slides (int)
+current() # returns the current slide
 next() # go to the next slide
 prev() # go to the previous slide
 go_to(2) # go to slide (int)
@@ -122,6 +124,8 @@ class MyTransition extends @Transition
 
 slideshow = new MySlideshow('#slides', MyTransition)
 ```
+
+For examples of how hooks are implemented, check out the [built in transitions folder](https://github.com/jenius/machete/tree/master/templates/base/transitions).
 
 If there are any other requests or needs from the JS API, feel free to open an issue and/or pull request and make a suggestion!
 
