@@ -3,7 +3,7 @@ Machete
 
 Fast, beautiful slideshows with markdown.
 
-> **NOTE:** Machete is still in early development, and is still very much incomplete. You can still use it, but be warned that all the promises made in this readme are not yet implemented.
+> **NOTE:** Machete is still in early development, and is still very much incomplete. You can still use it, but be warned that all the promises made in this readme are not yet implemented. If you'd like to keep up with the progress or contribute, check the [trello board](https://trello.com/b/JllTDqHZ/machete) : )
 
 
 ### Why should you care?
@@ -131,14 +131,4 @@ If there are any other requests or needs from the JS API, feel free to open an i
 
 ### Contributing
 
-Contributions are most welcome in any form, especially if you have coded up an awesome theme you'd like to share with the rest of anyone who uses this. If you would like to contribute, just follow these simple steps:
-
-1. Fork the repo
-2. Make some commits with your changes
-3. Make sure the commits are clean, clear, and organized
-4. Write a test for the changes you've made
-5. Send a pull request
-6. ???
-7. Profit!
-
-To run the tests, just run `mocha` locally. The test file is pretty straightforward, but if anything is confusing happy to clarify or add it in here.
+See the [contributing guide](https://github.com/jenius/machete/blob/master/contributing.md)
