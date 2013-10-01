@@ -1,3 +1,11 @@
+#= require 'code_highlighter'
+#= require 'keyboard_triggers'
+#= require 'slide_processor'
+#= require 'state_controller'
+#= require 'transition'
+
+#= require 'transitions/slide'
+
 class Slideshow
 
   constructor: (@el, TransitionClass) ->

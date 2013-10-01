@@ -3,6 +3,7 @@ fs = require 'fs'
 transformers = require 'transformers'
 color_converter = require '../util/colors'
 colors = require 'colors'
+Snockets = require 'snockets'
 
 # markup
 jade = transformers['jade']
@@ -15,12 +16,17 @@ uglify_html = require('html-minifier').minify
 rs = require 'robotskirt'
 parser = new rs.Markdown.std([rs.EXT_TABLES, rs.EXT_AUTOLINK])
 
+# custom snockets compiler
+Snockets.compilers.coffee.compileSync = (source_path) ->
+  coffee.renderFileSync(source_path, { bare: true })
+snockets = new Snockets
+
 class HTMLRenderer
 
   # add option to minify or not?
   constructor: (@config, files) ->
     base_path = path.join(__dirname, "../../templates/#{@config.template || 'dark'}")
-    @base_js_path = path.join(__dirname, '../../templates/base')
+    @base_js_path = path.join(__dirname, '../../templates/base/index.coffee')
     @html_template = path.join(base_path, 'index.jade')
     @css_template = path.join(base_path, 'style.styl')
     @js_template = path.join(base_path, 'script.coffee')
@@ -85,27 +91,13 @@ class HTMLRenderer
     output = "function MacheteContext(){" +
       # configuration variables
       include_variable('history_enabled', history_enabled) +
-
-      # base modules
-      include_coffee.call(@, 'slideshow.coffee') +
-      include_coffee.call(@, 'code_highlighter.coffee') +
-      include_coffee.call(@, 'keyboard_triggers.coffee') +
-      include_coffee.call(@, 'slide_processor.coffee') +
-      include_coffee.call(@, 'state_controller.coffee') +
-      include_coffee.call(@, 'transition.coffee') +
-
-      # transition types
-      include_coffee.call(@, 'transitions/slide.coffee') +
-
-      # include custom theme js
+      # base js
+      snockets.getConcatenation(@base_js_path, { minify: true, async: false }) + ";" +
+      # theme js
       coffee.renderFileSync(@js_template, { bare: true }) +
-
       "}; mch_ctx = new MacheteContext;"
 
     transformers['uglify-js'].renderSync(output)
-
-  include_coffee = (p) ->
-    return coffee.renderFileSync(path.join(@base_js_path, p), { bare: true })
 
   include_variable = (name, v) ->
     "var #{name} = #{v};"
